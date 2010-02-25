@@ -119,6 +119,9 @@
 	// Stub
 }
 
+#pragma mark -
+#pragma mark Editing hooks
+
 - (void)beginEditing {
 	// Stub
 }
@@ -128,19 +131,71 @@
 }
 
 #pragma mark -
+#pragma mark CRUD hooks
+
+- (BOOL)beforeSave {
+	return YES;
+}
+
+- (void)afterSave {
+	
+}
+
+- (BOOL)beforeCreate {
+	return YES;
+}
+
+- (void)afterCreate {
+	
+}
+
+- (BOOL)beforeUpdate {
+	return YES;
+}
+
+- (void)afterUpdate {
+	
+}
+
+- (BOOL)beforeDestroy {
+	return YES;
+}
+
+- (void)afterDestroy {
+	
+}
+
+#pragma mark -
 #pragma mark Default UI actions
 
 - (IBAction)create:(id)sender {
 	[self updateModel];
+	if (![self beforeCreate])
+		return;
+	if (![self beforeSave])
+		return;
 	NSError *error = nil;
 	if (![self.managedObjectContext save:&error])
 		[[[[UIAlertView alloc] initWithTitle:@"Error Creating Object" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease] show];
+	else {
+		[self afterSave];
+		[self afterCreate];
+	}
 }
 
 - (IBAction)update:(id)sender {
+	[self updateModel];
+	if (![self beforeUpdate])
+		return;
+	if (![self beforeSave])
+		return;
 	NSError *error = nil;
 	if (![self.managedObjectContext save:&error])
 		[[[[UIAlertView alloc] initWithTitle:@"Error Saving Changes" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease] show];	
+	else {
+		[self afterSave];
+		[self afterUpdate];
+	}
 }
 
 - (IBAction)rollback:(id)sender {
@@ -148,10 +203,14 @@
 }
 
 - (IBAction)destroy:(id)sender {
+	if (![self beforeDestroy])
+		return;
 	[self.managedObjectContext deleteObject:self.managedObject];
 	NSError *error = nil;
 	if (![self.managedObjectContext save:&error])
 		[[[[UIAlertView alloc] initWithTitle:@"Error Canceling" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil] autorelease] show];	
+	else
+		[self afterDestroy];
 }
 
 @end
