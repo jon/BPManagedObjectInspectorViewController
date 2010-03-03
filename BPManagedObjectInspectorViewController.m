@@ -74,6 +74,13 @@
 }
 
 #pragma mark -
+#pragma mark Rotation is cool with ushort
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+	return YES;
+}
+
+#pragma mark -
 #pragma mark Toggling editing
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
@@ -200,6 +207,8 @@
 
 - (IBAction)rollback:(id)sender {
 	[self.managedObjectContext rollback];
+	[self setEditing:NO animated:YES];
+	[self updateView];
 }
 
 - (IBAction)destroy:(id)sender {
