@@ -73,6 +73,11 @@
 	[self updateView];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	[self updateModel];
+}
+
 #pragma mark -
 #pragma mark Rotation is cool with ushort
 
@@ -91,10 +96,7 @@
 	if (!self.editing && editing) {
 		[self beginEditing];
 		if (!self.navigationItem.leftBarButtonItem) {
-			showsCancelButton = YES;
-			UIBarButtonItem *cancelButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(rollback:)] autorelease];
 			[self.navigationItem setHidesBackButton:YES animated:YES];
-			[self.navigationItem setLeftBarButtonItem:cancelButton animated:YES];			
 		}
 		[super setEditing:YES animated:animated];
 	}
@@ -103,11 +105,7 @@
 		[self update:self];
 		if (![self.managedObjectContext hasChanges]) {
 			// Update worked, no changes
-			if (showsCancelButton) {
-				[self.navigationItem setHidesBackButton:NO animated:YES];
-				[self.navigationItem setLeftBarButtonItem:nil animated:YES];
-				showsCancelButton = NO;
-			}
+			[self.navigationItem setHidesBackButton:NO animated:YES];
 			[super setEditing:NO animated:animated];
 			[self endEditing];
 		}
@@ -207,8 +205,8 @@
 
 - (IBAction)rollback:(id)sender {
 	[self.managedObjectContext rollback];
-	[self setEditing:NO animated:YES];
 	[self updateView];
+	[self setEditing:NO animated:YES];
 }
 
 - (IBAction)destroy:(id)sender {

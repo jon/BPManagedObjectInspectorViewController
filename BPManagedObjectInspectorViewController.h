@@ -9,9 +9,7 @@
 
 
 @interface BPManagedObjectInspectorViewController : UIViewController {
-	NSManagedObjectContext *managedObjectContext;
-	
-	BOOL showsCancelButton;
+	NSManagedObjectContext *managedObjectContext;	
 }
 
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
