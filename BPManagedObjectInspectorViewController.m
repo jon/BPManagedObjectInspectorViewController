@@ -75,7 +75,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
-	[self updateModel];
+	if (self.managedObject && ![self.managedObject isDeleted])
+		[self updateModel];
 }
 
 #pragma mark -
@@ -101,7 +102,6 @@
 		[super setEditing:YES animated:animated];
 	}
 	else if (self.editing && !editing) {
-		[self updateModel];
 		[self update:self];
 		if (![self.managedObjectContext hasChanges]) {
 			// Update worked, no changes

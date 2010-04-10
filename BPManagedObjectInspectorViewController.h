@@ -21,6 +21,15 @@
 - (void)updateView;
 - (void)updateModel;
 
+- (BOOL)beforeSave;
+- (void)afterSave;
+- (BOOL)beforeCreate;
+- (void)afterCreate;
+- (BOOL)beforeUpdate;
+- (void)afterUpdate;
+- (BOOL)beforeDestroy;
+- (void)afterDestroy;
+
 - (IBAction)create:(id)sender;
 - (IBAction)rollback:(id)sender;
 - (IBAction)update:(id)sender;
